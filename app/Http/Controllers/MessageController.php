@@ -14,8 +14,7 @@ class MessageController extends Controller
 {
     public function index()
     {
-        // $data = Messages::paginate(5);
-        $data = DB::table('messages')->paginate(5);
+        $data = DB::table('messages')->orderBy('created_at','desc')->paginate(5);
         return view('page/dashboard/index', compact('data'));
     }
 
@@ -25,13 +24,14 @@ class MessageController extends Controller
      */
     public function sendsms(Request $request)
     {
-
+        //validation for parameter
         $validator= Validator::make($request->all(),[
             'from'        => "required|string",
             'to'          => "required|string",
             'message'     => "required|string"
         ]);
 
+        //if validation error
         if($validator->fails()){
             return response()->json([
                 'success' => false,
@@ -40,7 +40,7 @@ class MessageController extends Controller
             ], 401);
         }
 
-        //disini;
+        //access api client to send sms;
         $client = new Client();
         $request2 = $client->request('POST','http://www.myvaluefirst.com/smpp/sendsms',[
             'form_params' => [
@@ -54,8 +54,7 @@ class MessageController extends Controller
 
         $response = $request2->getBody()->getContents();
         if($response == 'Sent.'){
-            // "atas";
-            
+            // "if sms success";
             $save_msg = Messages::create([
                 'to' => $request->to,
                 'from'  => $request->from,
@@ -72,7 +71,7 @@ class MessageController extends Controller
             ]);
 
         }else{
-            // "bawah";
+            // "if sms failed";
             $save_msg = Messages::create([
                 'to' => $request->to,
                 'from'  => $request->from,
