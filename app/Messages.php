@@ -28,6 +28,7 @@ class Messages extends Model
 		'from',
 		'message',
 		'msg_status',
+		'message_info',
 		'created_at',
 		'updated_at'
 	];

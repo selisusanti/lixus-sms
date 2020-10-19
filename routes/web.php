@@ -14,3 +14,11 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
+//CRUD Barang
+Route::prefix('dashboard')->group(function () {
+    Route::get('/', 'MessageController@index');
+    // Route::get('/create',"BarangController@create")->name('create-barang');
+    // Route::post('/save', 'BarangController@store')->name('store-barang');
+});
+
